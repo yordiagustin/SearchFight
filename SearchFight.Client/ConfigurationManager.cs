@@ -55,10 +55,9 @@ namespace SearchFight.Client
 
                     services.AddScoped<ISearchRepository, SearchRepository>();
                     services.AddScoped<IMapper<List<Task<SearchTotalResult>>, List<SearchTotalResult>>, SearchTotalResultMapper>();
-
-                    services.AddTransient<IGoogleSearchService, GoogleSearchService>();
-                    services.AddTransient<IBingSearchService, BingSearchService>();
-                    services.AddTransient<ISearchFightService, SearchFightService>();
+                    services.AddScoped<IEngineSearchService, GoogleSearchService>();
+                    services.AddScoped<IEngineSearchService, BingSearchService>();
+                    services.AddScoped<ISearchFightService, SearchFightService>();
 
                 })
                 .UseSerilog()

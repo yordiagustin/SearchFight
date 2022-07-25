@@ -13,7 +13,7 @@ namespace SearchFight.Services.Services
     /// <summary>
     /// Google Search Service
     /// </summary>
-    public class GoogleSearchService : IGoogleSearchService
+    public class GoogleSearchService : IEngineSearchService
     {
 
         private readonly ILogger<GoogleSearchService> _logger;

@@ -16,7 +16,7 @@ namespace SearchFight.Domain.Repository
     {
         private readonly ILogger<SearchRepository> _logger;
         private readonly IMapper<List<Task<SearchTotalResult>>, List<SearchTotalResult>> _mapper;
-        private readonly List<IEngineSearchService> _searchServices;
+        private readonly IEnumerable<IEngineSearchService> _engineSearchServices;
 
         /// <summary>
         /// Search Repository Constructor
@@ -27,14 +27,9 @@ namespace SearchFight.Domain.Repository
         /// <param name="googleSearchService">Google Search Service Dependency Injection</param>
         /// <exception cref="ArgumentNullException">Argument Null Exception</exception>
         public SearchRepository(ILogger<SearchRepository> logger, IMapper<List<Task<SearchTotalResult>>, List<SearchTotalResult>> mapper,
-            IBingSearchService bingSearchService, IGoogleSearchService googleSearchService)
+            IEnumerable<IEngineSearchService> engineSearchService)
         {
-            _searchServices = new List<IEngineSearchService>
-            {
-                googleSearchService,
-                bingSearchService
-            };
-
+            _engineSearchServices = engineSearchService ?? throw new ArgumentNullException(nameof(engineSearchService));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
@@ -56,7 +51,7 @@ namespace SearchFight.Domain.Repository
             try
             {
                 var searchTotalResultsTasks = new List<Task<SearchTotalResult>>();
-                foreach (var searchService in _searchServices)
+                foreach (var searchService in _engineSearchServices)
                 {
                     foreach (var term in terms)
                     {

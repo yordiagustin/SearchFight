@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using SearchFight.Domain.Mapper;
 using SearchFight.Domain.Repository;
+using SearchFight.Services.Abstractions;
 using SearchFight.Services.Configuration.Settings;
 using SearchFight.Services.Services;
 using System;
@@ -35,8 +36,12 @@ namespace SearchFight.Tests
 
             var bingSearchService = new BingSearchService(new BingSearchSettings(), new LoggerFactory().CreateLogger<BingSearchService>());
             var googleSearchService = new GoogleSearchService(new GoogleSearchSettings(), new LoggerFactory().CreateLogger<GoogleSearchService>());
+            var engineSearchService = new List<IEngineSearchService>();
+            engineSearchService.Add(bingSearchService);
+            engineSearchService.Add(googleSearchService);
 
-            var searchRepository = new SearchRepository(logger, mapper, bingSearchService, googleSearchService);
+            var searchRepository = new SearchRepository(logger, mapper, engineSearchService);
+
             await Assert.ThrowsAsync<ArgumentException>(() => searchRepository.GetSearchResults(null));
         }
 
@@ -48,8 +53,12 @@ namespace SearchFight.Tests
 
             var bingSearchService = new BingSearchService(new BingSearchSettings(), new LoggerFactory().CreateLogger<BingSearchService>());
             var googleSearchService = new GoogleSearchService(new GoogleSearchSettings(), new LoggerFactory().CreateLogger<GoogleSearchService>());
+            var engineSearchService = new List<IEngineSearchService>();
+            engineSearchService.Add(bingSearchService);
+            engineSearchService.Add(googleSearchService);
 
-            var searchRepository = new SearchRepository(logger, mapper, bingSearchService, googleSearchService);
+            var searchRepository = new SearchRepository(logger, mapper, engineSearchService);
+
             var terms = new string[0];
             await Assert.ThrowsAsync<ArgumentException>(() => searchRepository.GetSearchResults(terms));
         }
@@ -62,8 +71,12 @@ namespace SearchFight.Tests
 
             var bingSearchService = new BingSearchService(new BingSearchSettings(), new LoggerFactory().CreateLogger<BingSearchService>());
             var googleSearchService = new GoogleSearchService(new GoogleSearchSettings(), new LoggerFactory().CreateLogger<GoogleSearchService>());
+            var engineSearchService = new List<IEngineSearchService>();
+            engineSearchService.Add(bingSearchService);
+            engineSearchService.Add(googleSearchService);
 
-            var searchRepository = new SearchRepository(logger, mapper, bingSearchService, googleSearchService);
+            var searchRepository = new SearchRepository(logger, mapper, engineSearchService);
+
             var terms = new[] { "java" };
             await Assert.ThrowsAsync<ArgumentException>(() => searchRepository.GetSearchResults(terms));
         }
@@ -82,8 +95,11 @@ namespace SearchFight.Tests
 
             var bingSearchService = new BingSearchService(bingSearchSettings, new LoggerFactory().CreateLogger<BingSearchService>());
             var googleSearchService = new GoogleSearchService(googleSearchSettings, new LoggerFactory().CreateLogger<GoogleSearchService>());
+            var engineSearchService = new List<IEngineSearchService>();
+            engineSearchService.Add(bingSearchService);
+            engineSearchService.Add(googleSearchService);
 
-            var searchRepository = new SearchRepository(logger, mapper, bingSearchService, googleSearchService);
+            var searchRepository = new SearchRepository(logger, mapper, engineSearchService);
             var terms = new[] { "java", ".net" };
             await searchRepository.GetSearchResults(terms);
         }

@@ -16,7 +16,7 @@ namespace SearchFight.Services.Services
     /// <summary>
     /// Bing Search Service
     /// </summary>
-    public class BingSearchService : IBingSearchService
+    public class BingSearchService : IEngineSearchService
     {
 
         private readonly ILogger<BingSearchService> _logger;

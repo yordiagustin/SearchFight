@@ -2,6 +2,7 @@
 using SearchFight.Domain.Mapper;
 using SearchFight.Domain.Repository;
 using SearchFight.Domain.Service;
+using SearchFight.Services.Abstractions;
 using SearchFight.Services.Configuration.Settings;
 using SearchFight.Services.Entities;
 using SearchFight.Services.Services;
@@ -109,8 +110,11 @@ namespace SearchFight.Tests
 
             var bingSearchService = new BingSearchService(new BingSearchSettings(), new LoggerFactory().CreateLogger<BingSearchService>());
             var googleSearchService = new GoogleSearchService(new GoogleSearchSettings(), new LoggerFactory().CreateLogger<GoogleSearchService>());
+            var engineSearchService = new List<IEngineSearchService>();
+            engineSearchService.Add(bingSearchService);
+            engineSearchService.Add(googleSearchService);
 
-            return new SearchRepository(logger, mapper, bingSearchService, googleSearchService);
+            return new SearchRepository(logger, mapper, engineSearchService);
         }
 
     }
